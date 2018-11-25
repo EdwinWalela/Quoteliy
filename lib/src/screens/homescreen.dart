@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../widgets/quoteContainer.dart';
 import '../utils/bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   final bloc = Bloc();
   Future<void> _handleRefresh()async{
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    int baseTime = 1543176491*1000;
+    Duration diff = DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(baseTime));
     await bloc.increment(0);
-    return await bloc.fetchQuote(2);
+    return await bloc.fetchQuote((diff.inHours/12).floor());
   }
 
   @override
@@ -23,9 +27,11 @@ class HomeScreen extends StatelessWidget {
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               child: Container(
-                color: Colors.white,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                ),
                 child:QuoteContainer.hasData(bloc,snapshot.data),
-                height: MediaQuery.of(context).size.height/1.1,
+                height: MediaQuery.of(context).size.height,
               ),
             ),
           );
@@ -40,7 +46,7 @@ class HomeScreen extends StatelessWidget {
               child: Container(
                 color: Colors.white,
                 child:QuoteContainer.noData(bloc),
-                height: MediaQuery.of(context).size.height/1.15,
+                height: MediaQuery.of(context).size.height,
               ),
             ),
           );

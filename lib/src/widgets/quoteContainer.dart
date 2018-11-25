@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 import '../utils/bloc.dart';
 import '../models/quoteModel.dart';
 import '../utils/api.dart';
@@ -41,6 +42,7 @@ class QuoteContainer extends StatelessWidget {
 
   Widget favIcon(){
     return RaisedButton.icon(
+     elevation: 0.0,
      icon:Icon(
         Icons.favorite_border,
         size: 30.0,
@@ -59,7 +61,7 @@ class QuoteContainer extends StatelessWidget {
           color:Colors.white,
         ),
       ),
-      color: Colors.red,
+      color: Colors.transparent,
     );
   }
 
@@ -124,7 +126,7 @@ class QuoteContainer extends StatelessWidget {
           quoteBody(),
           Container(margin: EdgeInsets.only(top:30.0),),
           quoteAuthor(),
-          Container(margin: EdgeInsets.only(top:50.0),),
+          Container(margin: EdgeInsets.only(top:80.0),),
           favIcon(),
         ],
       );
@@ -137,19 +139,16 @@ class QuoteContainer extends StatelessWidget {
       stream: bloc.count,
       builder: (BuildContext context,AsyncSnapshot snapshot){
         if(snapshot.hasData){
-          imageURI = "https://picsum.photos/800/1000/?image=${snapshot.data}";
+          imageURI = "https://picsum.photos/1200/1000/?image=${snapshot.data}";
         }else{
-          imageURI = "https://picsum.photos/800/1000/?image=0";
+          imageURI = "https://picsum.photos/800/1000/?image=${Random().nextInt(1000)}";
         }
         return Container(
-          margin: EdgeInsets.all(20.0),
           padding: EdgeInsets.all(20.0),
-          height: MediaQuery.of(context).size.height/1.2,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0),
             image: DecorationImage(
               image:NetworkImage(imageURI),
-              fit:BoxFit.fill
+              fit:BoxFit.cover
             ),
           ),
           child:Column(

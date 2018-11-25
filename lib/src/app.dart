@@ -11,19 +11,6 @@ class App extends StatelessWidget {
       title:'Quoteliy',
       home:Scaffold(
         resizeToAvoidBottomPadding: false,
-        appBar:AppBar(
-          elevation: 1.0,
-          backgroundColor: Colors.white,
-          title:Text(
-            'Quoteliy',
-            style: TextStyle(
-              color: Colors.black,
-              fontFamily: "helvetica",
-              letterSpacing: 2.0
-            ),
-          ),
-          centerTitle: true,
-        ),
         body:HomeScreen(),
       )
     );
