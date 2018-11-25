@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
+import '../models/quoteModel.dart';
+import '../utils/api.dart';
 
 class QuoteContainer extends StatelessWidget {
+  var _quote;
+  QuoteContainer.hasData(QuoteModel quote){
+    _quote = quote;
+  }
+  QuoteContainer.noData(){
+    _quote = null;
+  }
 
   Widget quoteIcon(){
     return Icon(
@@ -11,16 +20,52 @@ class QuoteContainer extends StatelessWidget {
   }
 
   Widget quoteBody(){
-    String quote = "Live as if you were to die tomorrow. Learn as if you were to live forever";
-    return Text(
-      "$quote",
+   return Text(
+    "${_quote.body}",
       style: TextStyle(
         fontFamily: "Sanserif",
         color:Colors.white,
-        letterSpacing: 1.0,
-        fontSize: quote.length > 80 ? 18.0 : 25.0
+        letterSpacing: 1.5,
+        fontWeight: FontWeight.w800,
+        fontSize: _quote.body.length > 80 ? 18.0 : 25.0
       ),
       textAlign: TextAlign.center,
+    );
+  }
+
+  Widget favIcon(){
+    return RaisedButton.icon(
+     icon:Icon(
+        Icons.favorite_border,
+        size: 30.0,
+        color:Colors.white,
+      ),
+      shape: BeveledRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(5.0))
+      ),
+      highlightColor: Colors.white,
+      onPressed: (){
+        API().likeQuote(_quote.index);
+      },
+      label: Text(
+        '${_quote.likes}',
+        style: TextStyle(
+          color:Colors.white,
+        ),
+      ),
+      color: Colors.red,
+    );
+  }
+
+  Widget quoteAuthor(){
+    return Text(
+      '${_quote.author}',
+      style: TextStyle(
+        fontFamily: "Sanserif",
+        letterSpacing: 1.0,
+        fontSize: 20.0,
+        color:Colors.white70
+      ),
     );
   }
 
@@ -54,7 +99,7 @@ class QuoteContainer extends StatelessWidget {
       ),
       Container(margin: EdgeInsets.only(top:80.0),),
       Text(
-        'waiting for internet connection...',
+        'pull down to refresh...',
         style: TextStyle(
           fontFamily: "Sanserif",
           letterSpacing: 1.5,
@@ -65,51 +110,30 @@ class QuoteContainer extends StatelessWidget {
     ],);
   }
 
-  Widget favIcon(){
-    return RaisedButton.icon(
-     icon:Icon(
-        Icons.favorite_border,
-        size: 30.0,
-        color:Colors.white,
-      ),
-      shape: BeveledRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5.0))
-      ),
-      highlightColor: Colors.white,
-      animationDuration: Duration(seconds: 11),
-      onPressed: (){},
-      label: Text(
-        '1',
-        style: TextStyle(
-          color:Colors.white,
-        ),
-      ),
-      color: Colors.red,
-    );
-  }
-
-  Widget quoteAuthor(){
-    return Text(
-      'Mahatma Gandhi',
-      style: TextStyle(
-        fontFamily: "Sanserif",
-        letterSpacing: 1.0,
-        fontSize: 20.0,
-        color:Colors.white70
-      ),
-    );
+  Widget quoteContainer(){
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(margin: EdgeInsets.only(top:10.0),),
+          quoteBody(),
+          Container(margin: EdgeInsets.only(top:30.0),),
+          quoteAuthor(),
+          Container(margin: EdgeInsets.only(top:50.0),),
+          favIcon(),
+        ],
+      );
   }
 
   @override
   Widget build(BuildContext context) {
-    var uri = Uri.http('picsum.photos', '/800/1000');
     return Container(
       margin: EdgeInsets.all(20.0),
       padding: EdgeInsets.all(20.0),
       height: MediaQuery.of(context).size.height/1.2,
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.0),
         image: DecorationImage(
-          image:NetworkImage(uri.toString()),
+          image:NetworkImage('https://picsum.photos/800/1000/?random'),
           fit:BoxFit.fill
         ),
       ),
@@ -118,11 +142,7 @@ class QuoteContainer extends StatelessWidget {
         children: <Widget>[
           quoteIcon(),
           Container(margin: EdgeInsets.only(top:10.0),),
-          quoteBody(),
-          Container(margin: EdgeInsets.only(top:30.0),),
-          quoteAuthor(),
-          Container(margin: EdgeInsets.only(top:50.0),),
-          favIcon(),
+          _quote == null ? quoteBodyloading() : quoteContainer()
         ],
       )
     );

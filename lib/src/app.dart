@@ -15,7 +15,7 @@ class App extends StatelessWidget {
           title:Text(
             'Quoteliy',
             style: TextStyle(
-              color: Colors.red,
+              color: Colors.black,
               fontFamily: "helvetica",
               letterSpacing: 2.0
             ),
