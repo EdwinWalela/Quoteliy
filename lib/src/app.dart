@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './screens/homescreen.dart';
 
 class App extends StatelessWidget {
+ 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -9,6 +10,7 @@ class App extends StatelessWidget {
       theme: ThemeData.dark(),
       title:'Quoteliy',
       home:Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar:AppBar(
           elevation: 1.0,
           backgroundColor: Colors.white,

@@ -1,33 +1,37 @@
-//import './src/utils/api.dart';
-//  var api = API();
-//   await api.fetchQuote(1);
-//   await api.likeQuote(1);
-//   await api.fetchQuote(1);
 import 'dart:async';
 import './api.dart';
 import '../models/quoteModel.dart';
+import 'dart:math';
 
 class Bloc{
-  //refreshStream
-  final _quote = StreamController<int>();
-  //quote transformers
+  final _quote = StreamController<int>.broadcast();
+  final _counter = StreamController<int>.broadcast();
+  
+
   final _quoteTransformer = StreamTransformer<int,QuoteModel>.fromHandlers(
-    //check time,send request,add to stream
     handleData: (hour,sink) async{
         var quote = await API().fetchQuote(hour); 
         sink.add(quote);
     }
   );
+
+  final _countTransformer = StreamTransformer<int,int>.fromHandlers(
+    handleData: (prev,sink) async{ 
+        sink.add(Random().nextInt(1000));
+    }
+  );
     
   //getters
-  //sink.add
   Function(int) get fetchQuote => _quote.sink.add;
-  //stream with transformers
   Stream<QuoteModel> get quote => _quote.stream.transform(_quoteTransformer);
+  
+  get increment => _counter.sink.add;
+  Stream<int> get count => _counter.stream.transform(_countTransformer);
   
   
   _dispose(){
     _quote.close();
+    _counter.close();
   }
 }
 

@@ -5,7 +5,8 @@ import '../utils/bloc.dart';
 class HomeScreen extends StatelessWidget {
   final bloc = Bloc();
   Future<void> _handleRefresh()async{
-    return await bloc.fetchQuote(1);
+    await bloc.increment(0);
+    return await bloc.fetchQuote(2);
   }
 
   @override
@@ -14,7 +15,6 @@ class HomeScreen extends StatelessWidget {
       stream: bloc.quote,
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(snapshot.hasData){
-          print('${snapshot.data.author}'); 
           return RefreshIndicator(
             color: Colors.white,
             backgroundColor: Colors.red,
@@ -24,8 +24,8 @@ class HomeScreen extends StatelessWidget {
               physics: AlwaysScrollableScrollPhysics(),
               child: Container(
                 color: Colors.white,
-                child:QuoteContainer.hasData(snapshot.data),
-                height: MediaQuery.of(context).size.height/1.15,
+                child:QuoteContainer.hasData(bloc,snapshot.data),
+                height: MediaQuery.of(context).size.height/1.1,
               ),
             ),
           );
@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
               physics: AlwaysScrollableScrollPhysics(),
               child: Container(
                 color: Colors.white,
-                child:QuoteContainer.noData(),
+                child:QuoteContainer.noData(bloc),
                 height: MediaQuery.of(context).size.height/1.15,
               ),
             ),
