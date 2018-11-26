@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
     int baseTime = 1543176491*1000;
     Duration diff = DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(baseTime));
     await bloc.increment(0);
-    await bloc.fetchQuote((diff.inHours/12).floor());
+    await bloc.fetchQuote((diff.inHours/24).floor());
     return Future<void>.delayed(Duration(seconds: 3));
     
   }

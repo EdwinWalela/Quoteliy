@@ -141,7 +141,7 @@ class QuoteContainer extends StatelessWidget {
         if(snapshot.hasData){
           imageURI = "https://picsum.photos/1200/1000/?image=${snapshot.data}";
         }else{
-          imageURI = "https://picsum.photos/800/1000/?image=${Random().nextInt(1000)}";
+          imageURI = "https://picsum.photos/800/1000/?image=${Random().nextInt(1100)}";
         }
         return Container(
           padding: EdgeInsets.all(20.0),

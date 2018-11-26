@@ -6,7 +6,7 @@ import 'dart:math';
 class Bloc{
   final _quote = StreamController<int>.broadcast();
   final _counter = StreamController<int>.broadcast();
-  
+  static int imageCount = Random().nextInt(1000);
 
   final _quoteTransformer = StreamTransformer<int,QuoteModel>.fromHandlers(
     handleData: (hour,sink) async{
@@ -17,7 +17,14 @@ class Bloc{
 
   final _countTransformer = StreamTransformer<int,int>.fromHandlers(
     handleData: (prev,sink) async{ 
-        sink.add(Random().nextInt(1000));
+        int seed = Random().nextInt(5);
+        if(seed == 2 || seed == 4){
+          print('refreshed');
+          imageCount = Random().nextInt(1000);
+          sink.add(imageCount);
+        }else{
+          sink.add(imageCount);
+        }
     }
   );
     
