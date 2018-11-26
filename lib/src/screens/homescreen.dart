@@ -12,7 +12,6 @@ class HomeScreen extends StatelessWidget {
     await bloc.increment(0);
     await bloc.fetchQuote((diff.inHours/24).floor());
     return Future<void>.delayed(Duration(seconds: 3));
-    
   }
 
   @override

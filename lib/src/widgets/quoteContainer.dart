@@ -5,13 +5,14 @@ import '../models/quoteModel.dart';
 import '../utils/api.dart';
 
 class QuoteContainer extends StatelessWidget {
-  var _quote;
+  QuoteModel _quote;
   Bloc bloc;
-  String _imageURI ="https://picsum.photos/800/1000/?random";
+  static var count;
 
   QuoteContainer.hasData(Bloc _bloc,QuoteModel quote){
     _quote = quote;
     bloc = _bloc;
+    count = _quote.likes;
   }
   QuoteContainer.noData(Bloc _bloc){
     _quote = null;
@@ -41,27 +42,41 @@ class QuoteContainer extends StatelessWidget {
   }
 
   Widget favIcon(){
-    return RaisedButton.icon(
-     elevation: 0.0,
-     icon:Icon(
-        Icons.favorite_border,
-        size: 30.0,
-        color:Colors.white,
-      ),
-      shape: BeveledRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5.0))
-      ),
-      highlightColor: Colors.white,
-      onPressed: (){
-        API().likeQuote(_quote.index);
+    return StreamBuilder(
+      stream: bloc.like,
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        return RaisedButton(
+          elevation: 0.0,
+          child:Icon(
+              snapshot.hasData ? Icons.favorite : Icons.favorite_border,
+              size: 30.0,
+              color:Colors.white,
+            ),
+          shape: BeveledRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5.0))
+          ),
+          color:Colors.transparent,
+          highlightColor: Colors.white,
+          onPressed: (){
+              bloc.incrementLike(_quote.index);
+              count = count + 1;
+          },
+        );
       },
-      label: Text(
-        _quote.likes == null ? '0' : '${_quote.likes}',
-        style: TextStyle(
-          color:Colors.white,
-        ),
-      ),
-      color: Colors.transparent,
+    );
+  }
+
+  Widget likes(){
+    return StreamBuilder(
+      stream: bloc.like,
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        return Text(
+           snapshot.hasData ? '$count' :(_quote.likes == null ? '0' : '$count'),
+          style: TextStyle(
+            color:Colors.white,
+          ),
+        ); 
+      },
     );
   }
 
@@ -126,8 +141,10 @@ class QuoteContainer extends StatelessWidget {
           quoteBody(),
           Container(margin: EdgeInsets.only(top:30.0),),
           quoteAuthor(),
-          Container(margin: EdgeInsets.only(top:80.0),),
+          Container(margin: EdgeInsets.only(top:90.0),),
           favIcon(),
+           Container(margin: EdgeInsets.only(top:10.0),),
+          likes()
         ],
       );
   }
